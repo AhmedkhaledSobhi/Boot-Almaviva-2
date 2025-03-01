@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      direction: rtl;
+    }
+
+    fieldset {
+      background-color: #e3f2fd;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    legend {
+      background: #e5f2ff;
+      border: 1px solid #ccc;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 1.1rem;
+    }
+
+    #loginForm {
+      width: 100%;
+      max-width: 450px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #loginForm label {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    #loginForm input,
+    #loginForm select {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    #loginForm input:focus,
+    #loginForm select:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    #Login, #close {
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #Login {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #Login:hover {
+      background-color: #0056b3;
+    }
+
+    #close {
+      background-color: #dc3545;
+      color: white;
+      margin-top: 10px;
+    }
+
+    #close:hover {
+      background-color: #c82333;
+    }
+
+    @media (max-width: 400px) {
+      #loginForm {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <fieldset>
+    <legend>المهندس</legend>
+    <div id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" required />
+
+      <label for="password">Password</label>
+      <input type="text" id="password" name="password" placeholder="Password" required />
+
+      <label for="city">Select City:</label>
+      <select id="city">
+        <option value="Cairo">Cairo</option>
+        <option value="Alexandria">Alexandria</option>
+      </select>
+
+      <label for="VISAID">نوع و عددالتأشيرات</label>
+      <select id="VISAID">
+        <option value="Re-entry Visa (D)">Re-entry Visa (D)</option>
+        <option value="Employment Visa (D)">Employment Visa (D)</option>
+      </select>
+
+      <!-- <label for="SERVICE_LEVEL_ID">SERVICE_LEVEL_ID</label>
+      <input type="text" id="SERVICE_LEVEL_ID" name="text" disabled placeholder="SERVICE_LEVEL_ID" value="Standard - EGP 1750" /> -->
+
+
+      <button id="Login">بدء</button>
+      <button id="close">تعطيل</button>
+    </div>
+  </fieldset>
+
+  <script>
+    document.getElementById("Login").addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const officeId = document.getElementById("city").value;
+
+      if (!email || !password || !officeId) {
+        alert("يرجى ملء جميع الحقول!");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/start-bot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, officeId }),
+        });
+
+        const result = await response.json();
+        alert(result.message || result.error);
+      } catch (error) {
+        alert("حدث خطأ! تأكد من تشغيل السيرفر.");
+      }
+    });
+
+    document.getElementById("close").addEventListener("click", (event) => {
+      event.preventDefault();
+      alert("تم تعطيل العملية!");
+    });
+  </script>
+</body>
+</html>
